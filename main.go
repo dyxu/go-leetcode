@@ -1,22 +1,26 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 func main() {
-	root := TreeNode{
-		Val:  1,
-		Left: nil,
-		Right: &TreeNode{
-			Val: 2,
-			Left: &TreeNode{
-				Val:   2,
-				Left:  nil,
-				Right: nil,
-			},
-			Right: nil,
-		},
+	fmt.Printf("%v\n", integerBreak(24))
+}
+
+func integerBreak(n int) int {
+	if n == 2 || n == 3 {
+		return n - 1
 	}
-	fmt.Printf("%v\n", findMode(&root))
+
+	if n == 4 {
+		return 4
+	}
+
+	n -= 5
+
+	return int(math.Pow(3.0, float64(n/3+1)) * float64(n%3+2))
 }
 
 // Definition for a binary tree node.

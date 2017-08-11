@@ -1,7 +1,6 @@
-package main
+package maximum_length_of_pair_chain
 
 import (
-	"fmt"
 	"sort"
 )
 
@@ -22,15 +21,15 @@ func (s Slice) Less(i, j int) bool {
 }
 
 func findLongestChain(pairs [][]int) int {
-	p := Slice(pairs)
-	sort.Sort(p)
-	fmt.Printf("%v\n", p)
-	fmt.Printf("%v\n", pairs)
+	ps := Slice(pairs)
+	sort.Sort(ps)
+	cnt, m := 1, 0
+	for k, pair := range pairs {
+		if pair[0] > pairs[m][1] {
+			m = k
+			cnt++
+		}
+	}
 
-	return 0
-}
-
-func main() {
-	ss := [][]int{{1, 2}, {2, 1}, {3, 0}}
-	findLongestChain(ss)
+	return cnt
 }

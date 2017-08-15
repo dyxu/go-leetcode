@@ -1,11 +1,13 @@
-package main
+package is_subsquence
 
-import (
-	"fmt"
-)
+// 392. Is Subsequence
 
 func isSubsequence(s string, t string) bool {
 	idx, n := 0, len(s)
+	if n <= 0 {
+		return true
+	}
+
 	for i := range t {
 		if t[i] == s[idx] {
 			idx++
@@ -17,11 +19,4 @@ func isSubsequence(s string, t string) bool {
 	}
 
 	return false
-}
-
-func main() {
-	t, s := "ahbgdc", "abc"
-	fmt.Printf("%v\n", isSubsequence(s, t))
-	t, s = "ahbgdc", "axc"
-	fmt.Printf("%v\n", isSubsequence(s, t))
 }

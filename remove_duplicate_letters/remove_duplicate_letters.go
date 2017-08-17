@@ -1,6 +1,6 @@
-package remove_duplicate_letters
+// package remove_duplicate_letters
 
-//package main
+package main
 
 import "fmt"
 

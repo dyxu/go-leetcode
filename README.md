@@ -1,3 +1,3 @@
-## GO-LEETCODE
+## LEETCODE-SOLUTIONS
 
-leetcode golang solutions
+leetcode solutions

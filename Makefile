@@ -7,7 +7,7 @@ run: $(EXE)
 	@$(EXE)
 
 $(EXE): $(SRC)
-	@$(CC) -o $(EXE) $< -std=c++11
+	@$(CC) -o $(EXE) $< -std=c++11 -g
 
 clean:
 	@ [ -f $(EXE) ] && rm $(EXE)

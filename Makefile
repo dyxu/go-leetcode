@@ -1,6 +1,6 @@
 EXE = /tmp/main
 SRC = main.cpp
-CC = g++
+CC = clang++
 
 .PHONY: run clean
 run: $(EXE)

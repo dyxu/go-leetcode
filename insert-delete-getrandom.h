@@ -1,24 +1,9 @@
 #include <iostream>
-#include <sstream>
-#include <algorithm>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
 
 using namespace std;
-
-template<typename T>
-void Traversal(T& container) {
-	typename T::const_iterator first = container.begin(), last = container.end();
-	std::cout << "[";
-	while (first != last) {
-		std::cout << *first;
-		if (++first != last) {
-			std::cout << ", ";
-		}
-	}
-	std::cout << "]" << endl;
-}
 
 class RandomizedCollection {
 public:
@@ -70,26 +55,3 @@ private:
 	unordered_map<int, unordered_set<int>> map_;
 
 };
-
-/**
- * Your RandomizedCollection object will be instantiated and called as such:
- * RandomizedCollection obj = new RandomizedCollection();
- * bool param_1 = obj.insert(val);
- * bool param_2 = obj.remove(val);
- * int param_3 = obj.getRandom();
- */
-
-int main() {
-	RandomizedCollection rc;
-	rc.insert(4);
-	rc.insert(3);
-	rc.insert(4);
-	rc.insert(2);
-	rc.remove(4);
-	rc.remove(3);
-	rc.remove(4);
-	rc.remove(4);
-
-	cout << rc.getRandom() << endl;
-	return 0;
-}

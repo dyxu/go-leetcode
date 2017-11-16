@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
 
 using namespace std;
 
@@ -19,40 +20,76 @@ void Traversal(T& container) {
 	std::cout << "]" << endl;
 }
 
-class Solution {
+class RandomizedCollection {
 public:
-    Solution(vector<int> nums): nums_(nums) { }
+    /** Initialize your data structure here. */
+    RandomizedCollection() { }
 
-    /** Resets the array to its original configuration and return it. */
-    vector<int> reset() {
-		return nums_;
-    }
-
-    /** Returns a random shuffling of the array. */
-    vector<int> shuffle() {
-		vector<int> res(nums_);
-		int n = res.size();
-		for (int i = 0; i < res.size(); ++i) {
-			int pos = std::rand() % (n - i);
-			std::swap(res[i+pos], res[i]);
+    /** Inserts a value to the collection. Returns true if the collection did not already contain the specified element. */
+    bool insert(int val) {
+		auto iter = map_.find(val);
+		bool ok = (iter == map_.end());
+		nums_.push_back(val);
+		if (ok) {
+			map_[val] = unordered_set<int>({static_cast<int>(nums_.size() - 1)});
+		} else {
+			iter->second.insert(nums_.size() - 1);
 		}
 
-		return res;
+		return ok;
+    }
+
+    /** Removes a value from the collection. Returns true if the collection contained the specified element. */
+    bool remove(int val) {
+		auto iter = map_.find(val);
+		if (iter != map_.end()) {
+			auto first = iter->second.begin();
+			iter->second.erase(first);
+			int back = nums_.back();
+			nums_[*first] = back;
+			auto back_iter = map_.find(back);
+			back_iter->second.insert(*first);
+			back_iter->second.erase(nums_.size() - 1);
+			nums_.pop_back();
+			if (iter->second.empty()) {
+				map_.erase(iter);
+			}
+
+			return true;
+		}
+
+		return false;
+    }
+
+    /** Get a random element from the collection. */
+    int getRandom() {
+		return nums_[std::rand() % nums_.size()];
     }
 private:
 	vector<int> nums_;
+	unordered_map<int, unordered_set<int>> map_;
+
 };
 
 /**
- * Your Solution object will be instantiated and called as such:
- * Solution obj = new Solution(nums);
- * vector<int> param_1 = obj.reset();
- * vector<int> param_2 = obj.shuffle();
+ * Your RandomizedCollection object will be instantiated and called as such:
+ * RandomizedCollection obj = new RandomizedCollection();
+ * bool param_1 = obj.insert(val);
+ * bool param_2 = obj.remove(val);
+ * int param_3 = obj.getRandom();
  */
 
 int main() {
-	vector<int> nums = {1, 2, 3, 3, 3};
-	Solution s(nums);
+	RandomizedCollection rc;
+	rc.insert(4);
+	rc.insert(3);
+	rc.insert(4);
+	rc.insert(2);
+	rc.remove(4);
+	rc.remove(3);
+	rc.remove(4);
+	rc.remove(4);
 
+	cout << rc.getRandom() << endl;
 	return 0;
 }

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
-#include <algorithm>
+#include <limits>
+#include <stack>
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
@@ -17,79 +18,43 @@ void Traversal(T& container) {
 			std::cout << ", ";
 		}
 	}
-	std::cout << "]" << endl;
+	std::cout << "]" << std::endl;
 }
 
-class RandomizedCollection {
+class Solution {
 public:
-    /** Initialize your data structure here. */
-    RandomizedCollection() { }
-
-    /** Inserts a value to the collection. Returns true if the collection did not already contain the specified element. */
-    bool insert(int val) {
-		auto iter = map_.find(val);
-		bool ok = (iter == map_.end());
-		nums_.push_back(val);
-		if (ok) {
-			map_[val] = unordered_set<int>({static_cast<int>(nums_.size() - 1)});
-		} else {
-			iter->second.insert(nums_.size() - 1);
-		}
-
-		return ok;
-    }
-
-    /** Removes a value from the collection. Returns true if the collection contained the specified element. */
-    bool remove(int val) {
-		auto iter = map_.find(val);
-		if (iter != map_.end()) {
-			auto first = iter->second.begin();
-			iter->second.erase(first);
-			int back = nums_.back();
-			nums_[*first] = back;
-			auto back_iter = map_.find(back);
-			back_iter->second.insert(*first);
-			back_iter->second.erase(nums_.size() - 1);
-			nums_.pop_back();
-			if (iter->second.empty()) {
-				map_.erase(iter);
+    int findNumberOfLIS(vector<int>& nums) {
+		int n = nums.size(), res = 0, max_len = 0;
+		vector<std::pair<int, int>> dp(n, {1, 1});
+		for (int i = 0; i < n; i++) {
+			for (int k = 0; k < i; k++) {
+				if (nums[i] > nums[k]) {
+					if (dp[i].first == dp[k].first + 1) {
+						dp[i].second += dp[k].second;
+					}
+					if (dp[i].first < dp[k].first + 1) {
+						dp[i] = {dp[k].first + 1, dp[k].second};
+					}
+				}
 			}
 
-			return true;
+			if (max_len == dp[i].first) {
+				res += dp[i].second;
+			}
+			if (max_len < dp[i].first) {
+				max_len = dp[i].first;
+				res = dp[i].second;
+			}
 		}
 
-		return false;
+		return res;
     }
-
-    /** Get a random element from the collection. */
-    int getRandom() {
-		return nums_[std::rand() % nums_.size()];
-    }
-private:
-	vector<int> nums_;
-	unordered_map<int, unordered_set<int>> map_;
-
 };
 
-/**
- * Your RandomizedCollection object will be instantiated and called as such:
- * RandomizedCollection obj = new RandomizedCollection();
- * bool param_1 = obj.insert(val);
- * bool param_2 = obj.remove(val);
- * int param_3 = obj.getRandom();
- */
-
 int main() {
-	RandomizedCollection rc;
-	rc.insert(4);
-	rc.insert(3);
-	rc.insert(4);
-	rc.insert(2);
-	rc.remove(4);
-	rc.remove(3);
-	rc.remove(4);
-	rc.remove(4);
-
-	cout << rc.getRandom() << endl;
+	Solution s;
+	vector<string> res;
+	Traversal(res);
+    
 	return 0;
 }

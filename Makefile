@@ -3,10 +3,10 @@ SRC = main.cpp
 CC = g++
 
 .PHONY: run clean
-run: $(EXE)
+run: build
 	@$(EXE)
 
-$(EXE): $(SRC)
+build: $(SRC)
 	@$(CC) -o $(EXE) $< -std=c++11 -g
 
 clean:

@@ -1,60 +1,56 @@
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include <limits>
 #include <stack>
 #include <vector>
+#include <queue>
 #include <unordered_map>
 #include <unordered_set>
 
 using namespace std;
 
-template<typename T>
-void Traversal(T& container) {
-	typename T::const_iterator first = container.begin(), last = container.end();
-	std::cout << "[";
-	while (first != last) {
-		std::cout << *first;
-		if (++first != last) {
-			std::cout << ", ";
-		}
+std::vector<int> ReadAll(string filename) {
+	std::vector<int> nums;
+	string line;
+	std::ifstream fin(filename);
+	while (fin >> line) {
+		int num = std::atoi(line.c_str());
+		nums.push_back(num);
 	}
-	std::cout << "]" << std::endl;
+
+	return nums;
 }
 
-class Solution {
-public:
-    int findNumberOfLIS(vector<int>& nums) {
-		int n = nums.size(), res = 0, max_len = 0;
-		vector<std::pair<int, int>> dp(n, {1, 1});
-		for (int i = 0; i < n; i++) {
-			for (int k = 0; k < i; k++) {
-				if (nums[i] > nums[k]) {
-					if (dp[i].first == dp[k].first + 1) {
-						dp[i].second += dp[k].second;
-					}
-					if (dp[i].first < dp[k].first + 1) {
-						dp[i] = {dp[k].first + 1, dp[k].second};
-					}
-				}
-			}
-
-			if (max_len == dp[i].first) {
-				res += dp[i].second;
-			}
-			if (max_len < dp[i].first) {
-				max_len = dp[i].first;
-				res = dp[i].second;
+std::vector<int> TopN(std::vector<int>& nums, int n) {
+	std::priority_queue<int, std::vector<int>, std::greater<int> > min_heap;
+	for (int i = 0; i < nums.size(); i++) {
+		if (i < n) {
+			min_heap.push(nums[i]);
+		} else {
+			if (nums[i] >= min_heap.top()) {
+				min_heap.pop();
+				min_heap.push(nums[i]);
 			}
 		}
+	}
 
-		return res;
-    }
-};
+	std::vector<int> res(min_heap.size());
+	for (int i = min_heap.size() - 1; i >= 0; i--) {
+		res[i] = min_heap.top();
+		min_heap.pop();
+	}
+
+	return res;
+}
+
 
 int main() {
-	Solution s;
-	vector<string> res;
-	Traversal(res);
-    
+	vector<int> nums{3, 2, 1, 5, 3, 6, 5};
+	vector<int> res;
+	res = TopN(nums, 5);
+	for (auto num: res) {
+		cout << num << endl;
+	}
 	return 0;
 }
